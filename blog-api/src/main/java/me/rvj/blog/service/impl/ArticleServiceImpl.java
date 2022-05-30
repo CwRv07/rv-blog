@@ -11,12 +11,14 @@ import me.rvj.blog.mapper.ArticleMapper;
 import me.rvj.blog.mapper.ArticleTagMapper;
 import me.rvj.blog.mapper.TagMapper;
 import me.rvj.blog.service.ArticleService;
+import me.rvj.blog.service.ThreadService;
 import me.rvj.blog.util.UserThreadLocal;
 import me.rvj.blog.vo.*;
 import me.rvj.blog.vo.params.ArticleParams;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -38,6 +40,10 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleBodyMapper articleBodyMapper;
     @Autowired
     private ArticleTagMapper articleTagMapper;
+    @Autowired
+    private ThreadService threadService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public Result listArticle(PageParams pageParams) {
@@ -68,6 +74,12 @@ public class ArticleServiceImpl implements ArticleService {
     public Result articleDetail(Long id) {
 
         ArticleVo detail = articleMapper.articleDetail(id);
+        /*更新阅读量*/
+        threadService.updateArticleViewCount(detail);
+        String viewCount = (String) stringRedisTemplate.opsForHash().get("view_count", String.valueOf(detail.getId()));
+        if (viewCount != null){
+            detail.setViewCounts(Integer.parseInt(viewCount));
+        }
 
         return Result.success(detail);
     }
@@ -85,7 +97,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setTitle(articleParams.getTitle());
 
         /* 判断文章为新增还是更新 */
-        boolean isUpdate = articleParams.getId() != null ? true : false;
+        boolean isUpdate = articleParams.getId() != null;
 
 //        文章信息
         if (isUpdate) {

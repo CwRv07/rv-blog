@@ -7,7 +7,21 @@ spring:
     username: root
     password: Rv_Jiang
     driver-class-name: com.mysql.cj.jdbc.Driver
+  #redis Config
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: qweasd
+    timeout: 0
+    jedis:
+      pool:
+        max-active: 8 #连接池最大连接数
+        max-wait: -1  #连接池最大阻塞等待时间
+        max-idle: 8   #连接池最大空闲时间
+        min-idle: 0   #连接池最小连接时间
 
+#MybatisPlus Config
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
