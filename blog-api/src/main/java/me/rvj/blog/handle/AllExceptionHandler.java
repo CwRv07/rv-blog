@@ -1,5 +1,6 @@
 package me.rvj.blog.handle;
 
+import me.rvj.blog.vo.ErrorCode;
 import me.rvj.blog.vo.Result;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +20,6 @@ public class AllExceptionHandler {
     @ResponseBody //返回json数据
     public Result doException(Exception ex){
         ex.printStackTrace();
-        return Result.fail(500,"服务器繁忙");
+        return Result.fail(ErrorCode.SERVER_BUSY);
     }
 }

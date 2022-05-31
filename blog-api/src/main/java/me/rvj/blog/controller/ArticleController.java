@@ -1,11 +1,19 @@
 package me.rvj.blog.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import me.rvj.blog.service.ArticleService;
+import me.rvj.blog.vo.ErrorCode;
 import me.rvj.blog.vo.PageParams;
 import me.rvj.blog.vo.Result;
 import me.rvj.blog.vo.params.ArticleParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 
 /**
  * @program: rv-blog
@@ -15,48 +23,59 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("articles")
+@Slf4j
 public class ArticleController {
 
     @Autowired
     ArticleService articleService;
 
-    
-    @GetMapping("listArticle")
+
+
     /**
      * 文章列表Controller
-     * @param 
+     * @param
      * @return me.rvj.blog.vo.Result
      * @author Rv_Jiang
      * @date 2022/5/25 21:19
      */
+    @GetMapping("listArticle")
     public Result listArticle(){
         return articleService.listArticle(new PageParams());
     }
 
-    @GetMapping("listArticleByCondition")
     /**
      * 条件文章列表Controller
-     * @param 
+     * @param
      * @return me.rvj.blog.vo.Result
      * @author Rv_Jiang
      * @date 2022/5/27 20:35
      */
-    public Result listArticleByCondition(){
-        Long[] tagId = new Long[]{5L};
-        return articleService.listArticleByCondition(new PageParams(1,10,null,null,123123L,null));
+    @GetMapping("listArticleByCondition")
+    public Result listArticleByCondition(PageParams pageParams){
+        if(pageParams.getPageSize()==null){
+            return Result.fail(ErrorCode.PARAMS_ERROR);
+        }
+        return articleService.listArticleByCondition(pageParams);
     }
 
-    @GetMapping("detail/{id}")
+
     /**
      * 文章详情Controller
-     * @param id
+     * @param articleId
      * @return me.rvj.blog.vo.Result
      * @author Rv_Jiang
      * @date 2022/5/25 21:48
      */
-    public Result articleDetail(@PathVariable Long id){return articleService.articleDetail(id);}
-    
-    @PostMapping("upload")
+    @GetMapping("detail")
+    public Result articleDetail(@RequestParam Long articleId){
+        if(articleId==null){
+            return Result.fail(ErrorCode.PARAMS_ERROR);
+        }
+        return articleService.articleDetail(articleId);
+    }
+
+
+
     /**
      * 上传文件
      * @param articleParams
@@ -64,12 +83,52 @@ public class ArticleController {
      * @author Rv_Jiang
      * @date 2022/5/27 20:40
      */
-    public Result uploadArticle(@RequestBody ArticleParams articleParams){
+    @PostMapping("upload")
+    public Result uploadArticle(@Valid @RequestBody ArticleParams articleParams, BindingResult result){
+        if(result.hasErrors()){
+            log.error("uploadArticleController 参数错误");
+            for (ObjectError error : result.getAllErrors()) {
+                log.error(error.toString());
+            }
+            return Result.fail(ErrorCode.PARAMS_ERROR);
+        }
         return articleService.uploadArticle(articleParams);
     }
 
+
+    /**
+     * 更新文章
+     * @param articleParams
+     * @param result
+     * @return me.rvj.blog.vo.Result
+     * @author Rv_Jiang
+     * @date 2022/5/31 19:44
+     */
+    @PutMapping("update")
+    public Result updateArticle(@Valid @RequestBody ArticleParams articleParams,BindingResult result){
+        if(result.hasErrors()){
+            log.error("updateArticleController 参数错误");
+            for (ObjectError error : result.getAllErrors()) {
+                log.error(error.toString());
+            }
+            return Result.fail(ErrorCode.PARAMS_ERROR);
+        }
+        return articleService.updateArticle(articleParams);
+    }
+
+
+    /**
+     * 删除文章
+     * @param articleId
+     * @return Result
+     * @author Rv_Jiang
+     * @date 2022/5/31 19:44
+     */
     @DeleteMapping("delete/{articleId}")
-    public Result deleteArticle(@PathVariable Long articleId){
+    public Result deleteArticle(@PathVariable("articleId") Long articleId){
+        if(articleId==null){
+            return Result.fail(ErrorCode.PARAMS_ERROR);
+        }
         return articleService.deleteArticle(articleId);
     }
 }

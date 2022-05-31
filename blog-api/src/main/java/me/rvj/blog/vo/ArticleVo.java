@@ -6,6 +6,8 @@ import lombok.Data;
 import me.rvj.blog.entity.*;
 import net.minidev.json.annotate.JsonIgnore;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 

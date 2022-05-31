@@ -54,6 +54,15 @@ public interface ArticleService {
     Result uploadArticle(ArticleParams articleParams);
 
     /**
+     * 更新文章
+     * @param articleParams
+     * @return Result
+     * @author Rv_Jiang
+     * @date 2022/5/31 10:05
+     */
+    Result updateArticle(ArticleParams articleParams);
+
+    /**
      * 删除文章
      * @param articleId
      * @return Result

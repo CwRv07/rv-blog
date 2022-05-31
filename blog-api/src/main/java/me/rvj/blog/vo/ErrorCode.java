@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     //    通用
     PARAMS_ERROR(400, "参数错误"),
+    SERVER_BUSY(500, "服务器繁忙"),
 
     //    登录注册 && 权限
     ACCOUNT_PWD_ERROR(400, "用户名或密码错误"),
@@ -19,6 +20,9 @@ public enum ErrorCode {
 
     TOKEN_ERROR(401, "token不合法"),
     NO_PERMISSION(401, "无访问权限"),
+
+    //    文章操作
+    ARTICLE_NOT_EXIST(400,"当前文章可能不存在"),
 
     ;
 

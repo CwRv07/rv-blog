@@ -25,7 +25,7 @@
             <if test="categoryId != null">
                 and category_id=#{categoryId}
             </if>
-            <if test="tagId != null">
+            <if test="tagId != null and tagId.length>0">
                 and id in (select article_id from rv_article_tag where tag_id IN
                 <foreach collection="tagId" item="id" index="index" open="(" close=")" separator=",">
                     #{id}
