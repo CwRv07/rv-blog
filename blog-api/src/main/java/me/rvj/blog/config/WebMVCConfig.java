@@ -1,5 +1,6 @@
 package me.rvj.blog.config;
 
+import me.rvj.blog.handle.IPInterceptor;
 import me.rvj.blog.handle.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,8 @@ public class WebMVCConfig implements WebMvcConfigurer {
 
     @Autowired
     private LoginInterceptor loginInterceptor;
+    @Autowired
+    private IPInterceptor ipInterceptor;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -28,10 +31,12 @@ public class WebMVCConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(loginInterceptor)
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(ipInterceptor)
+                .addPathPatterns("/**");
+//                .addInterceptor(loginInterceptor)
 //                .addPathPatterns("/**")
 //                .excludePathPatterns("/login","/register");
-//    }
+    }
 }

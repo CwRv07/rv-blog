@@ -2,11 +2,15 @@ server:
   port: 8089
 
 spring:
+  hikari:
+    connection-init-sql: SET NAMES utf8mb4
   datasource:
     url: jdbc:mysql://localhost:3306/rvblog?useUnicode=true&characterEncoding=UTF-8&serverTimeZone=UTC
     username: root
     password: Rv_Jiang
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-init-sql:
   #redis Config
   redis:
     database: 0

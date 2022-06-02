@@ -97,7 +97,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
 //        初始化参数
         int insertNumber;
-        Long authorId = UserThreadLocal.get();
+        Long authorId = Long.valueOf(UserThreadLocal.get(UserThreadLocal.KEY_USER_ID));
         Article article = new Article();
 
         article.setCategoryId(articleParams.getCategoryId());
@@ -163,7 +163,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
 //        初始化参数
         int updateNumber;
-        Long authorId = UserThreadLocal.get();
+        Long authorId = Long.valueOf(UserThreadLocal.get(UserThreadLocal.KEY_USER_ID));
         Article article = new Article();
 
         article.setId(articleParams.getId());

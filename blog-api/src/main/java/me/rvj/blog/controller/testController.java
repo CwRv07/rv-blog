@@ -1,8 +1,11 @@
 package me.rvj.blog.controller;
 
 import com.alibaba.fastjson.JSON;
+import me.rvj.blog.entity.SysUser;
 import me.rvj.blog.mapper.ArticleMapper;
+import me.rvj.blog.mapper.SysUserMapper;
 import me.rvj.blog.service.ArticleService;
+import me.rvj.blog.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class testController {
     @Autowired
     ArticleService articleService;
+    @Autowired
+    SysUserMapper sysUserMapper;
 
-//    @GetMapping("/{id}")
-//    public Object test(@PathVariable(value="id") Long id){
-//        return JSON.toJSON(articleService.findArticleById(id));
-//    }
+    @GetMapping()
+    public Result test(){
+        SysUser sysUser = sysUserMapper.selectById(1404448588146192386L);
+        return Result.success(sysUser);
+    }
 }

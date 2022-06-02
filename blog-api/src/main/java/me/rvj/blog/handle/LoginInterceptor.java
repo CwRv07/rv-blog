@@ -64,7 +64,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         /* 验证成功 */
-        UserThreadLocal.set(userId);
+        UserThreadLocal.set(UserThreadLocal.KEY_USER_ID,String.valueOf(userId));
         return true;
     }
 
