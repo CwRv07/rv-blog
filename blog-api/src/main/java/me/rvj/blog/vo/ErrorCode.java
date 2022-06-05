@@ -22,7 +22,11 @@ public enum ErrorCode {
     NO_PERMISSION(401, "无访问权限"),
 
     //    文章操作
-    ARTICLE_NOT_EXIST(400,"当前文章可能不存在"),
+    ARTICLE_NOT_EXIST(400, "当前文章可能不存在"),
+
+    //    标签操作
+    TAG_HAS_EXIST(400, "当前标签可能已存在"),
+    TAG_NOT_EXIST(400, "当前标签可能不存在"),
 
     ;
 

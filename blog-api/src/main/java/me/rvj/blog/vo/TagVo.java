@@ -1,6 +1,8 @@
 package me.rvj.blog.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
+import me.rvj.blog.entity.Category;
 
 /**
  * @program: rv-blog
@@ -10,4 +12,16 @@ import lombok.Data;
  */
 @Data
 public class TagVo {
+
+    private Long id;
+
+    private String avatar;
+
+    private String tagName;
+
+
+    @TableField(exist = false)
+    private CategoryVo category;
+
+
 }

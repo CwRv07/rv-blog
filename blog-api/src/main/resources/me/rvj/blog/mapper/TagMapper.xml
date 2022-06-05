@@ -3,4 +3,45 @@
 
 <mapper namespace="me.rvj.blog.mapper.TagMapper">
 
+    <resultMap id="tagMap" type="me.rvj.blog.vo.TagVo">
+        <id column="id" property="id"/>
+        <association property="category" column="category_id" select="findCategoryById"/>
+    </resultMap>
+
+    <select id="listTag" resultMap="tagMap">
+        SELECT *
+        FROM rv_tag
+        ORDER BY id DESC
+    </select>
+
+    <select id="listTagByCategory" resultMap="tagMap">
+        SELECT * FROM rv_tag
+        <where>
+            1=1
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="findTag" resultMap="tagMap">
+        SELECT * FROM rv_tag
+        <where>
+            1=1
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="tagName != null">
+                AND tag_name = #{tagName}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="findCategoryById" parameterType="long" resultType="me.rvj.blog.vo.CategoryVo">
+        SELECT *
+        FROM rv_category
+        WHERE id = #{id};
+    </select>
 </mapper>

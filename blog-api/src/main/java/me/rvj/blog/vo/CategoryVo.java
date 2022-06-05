@@ -1,4 +1,4 @@
-package me.rvj.blog.entity;
+package me.rvj.blog.vo;
 
 import lombok.Data;
 
@@ -6,17 +6,18 @@ import lombok.Data;
  * @program: rv-blog
  * @description:
  * @author: Rv_Jiang
- * @date: 2022/5/21 16:05
+ * @date: 2022/6/5 14:26
  */
 
 @Data
-public class Tag {
+public class CategoryVo {
 
     private Long id;
 
     private String avatar;
 
-    private String tagName;
+    private String categoryName;
 
-    private Long categoryId;
+    private String description;
+
 }

@@ -1,16 +1,20 @@
-package me.rvj.blog.entity;
+package me.rvj.blog.vo.params;
 
 import lombok.Data;
 
 /**
  * @program: rv-blog
- * @description:
+ * @description: 标签Vo
  * @author: Rv_Jiang
- * @date: 2022/5/21 16:05
+ * @date: 2022/6/5 14:12
  */
 
 @Data
-public class Tag {
+public class TagParams {
+
+    private Integer page = 1;
+
+    private Integer pageSize = 10;
 
     private Long id;
 
