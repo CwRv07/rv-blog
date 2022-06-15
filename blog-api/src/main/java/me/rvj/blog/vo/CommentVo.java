@@ -23,6 +23,8 @@ public class CommentVo {
 
     private Long ancestorId;
 
+    private Long parentId;
+
     private String createDate;
 
     private Integer like;

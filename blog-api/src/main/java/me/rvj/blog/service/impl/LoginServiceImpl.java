@@ -49,7 +49,7 @@ public class LoginServiceImpl implements LoginService {
         lqw.eq(SysUser::getAccount, account);
         SysUser user = userMapper.selectOne(lqw);
         /* 账号或密码错误 */
-        if (user == null || !user.getPassword().equals(DigestUtils.sha512Hex(
+        if (user == null || user.getDeleted() == 1 || !user.getPassword().equals(DigestUtils.sha512Hex(
                 password + (user.getSalt() != null ? user.getSalt() : DEFAULT_SALT))
         )) {
             return Result.fail(ErrorCode.ACCOUNT_PWD_ERROR);
@@ -67,7 +67,6 @@ public class LoginServiceImpl implements LoginService {
         String account = loginParams.getAccount();
         String password = loginParams.getPassword();
         String nickname = loginParams.getNickname();
-//        System.out.println(account+"\t"+password+"\t"+nickname);
 
 //        边界处理
         if (StringUtils.isBlank(account)
@@ -93,7 +92,6 @@ public class LoginServiceImpl implements LoginService {
         user.setCreateDate(System.currentTimeMillis());
         user.setLastLogin(System.currentTimeMillis());
         user.setAvatar("/static/img/avatar/user.png");
-        user.setAdmin(0); //1 为true
         user.setDeleted(0); // 0 为false
         user.setSalt(DEFAULT_SALT);
         userMapper.insert(user);

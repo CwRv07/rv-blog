@@ -17,19 +17,13 @@ public class SysUser {
 
     private String account;
 
-    private Integer admin;
-
     private String avatar;
 
     private Long createDate;
 
     private Integer deleted;
 
-    private String email;
-
     private Long lastLogin;
-
-    private String mobilePhoneNumber;
 
     private String nickname;
 

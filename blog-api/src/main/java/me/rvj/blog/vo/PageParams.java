@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
  */
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class PageParams {
 
     private Integer page = 1;
@@ -24,5 +22,6 @@ public class PageParams {
     private Long[] tagId;
     private Long upperLimitTime;
     private Long lowerLimitTime;
+    private String search;
 
 }

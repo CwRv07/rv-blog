@@ -36,7 +36,10 @@
                 and create_date &lt;= #{upperLimitTime}
             </if>
             <if test="lowerLimitTime != null">
-                and create_date &gt;= #{upperLimitTime}
+                and create_date &gt;= #{lowerLimitTime}
+            </if>
+            <if test='search != null and search != ""'>
+                and title like concat("%",#{search,jdbcType=VARCHAR},"%")
             </if>
         </where>
         order by weight,create_date desc
@@ -79,13 +82,13 @@
         SELECT *
         FROM rv_comment
         WHERE article_id = #{id}
-        ORDER BY create_date ASC, 'like' DESC
+        ORDER BY create_date DESC, 'like' DESC
     </select>
 
     <!--  findSelect  -->
     <select id="findUserById" parameterType="long" resultType="me.rvj.blog.vo.UserVo">
-        SELECT id, nickname, avatar
-        FROM rv_sys_user
+        SELECT id, nickname, website
+        FROM rv_user
         WHERE id = #{id};
     </select>
     <select id="findCategoryById" parameterType="long" resultType="me.rvj.blog.entity.Category">
@@ -103,6 +106,6 @@
     <select id="findContentById" parameterType="long" resultType="java.lang.String">
         SELECT content
         FROM rv_article_body
-        WHERE article_id = #{id};
+        WHERE id = #{id};
     </select>
 </mapper>

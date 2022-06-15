@@ -39,8 +39,8 @@ public class ArticleController {
      * @date 2022/5/25 21:19
      */
     @GetMapping("listArticle")
-    public Result listArticle(){
-        return articleService.listArticle(new PageParams());
+    public Result listArticle(PageParams pageParams){
+        return articleService.listArticle(pageParams);
     }
 
     /**

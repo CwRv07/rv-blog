@@ -59,7 +59,7 @@ public class ThreadService {
 
     @Async("taskExecutor")
     public void updateArticleViewCount(ArticleVo article) {
-        stringRedisTemplate.opsForHash().increment(VIEW_COUNT, String.valueOf(article.getId()), 1);
+//        stringRedisTemplate.opsForHash().increment(VIEW_COUNT, String.valueOf(article.getId()), 1);
     }
 
 }

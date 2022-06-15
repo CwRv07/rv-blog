@@ -56,7 +56,18 @@ public class ArticleServiceImpl implements ArticleService {
 
         IPage<ArticleVo> articlePage = articleMapper.listArticle(page);
 
-        return Result.success(articlePage.getRecords());
+//        读取缓存
+        List<ArticleVo> records = articlePage.getRecords();
+        int length=records.size();
+        for(int i=0;i<length;i++){
+            String viewCounts=getViewCounts(records.get(i).getId());
+            if(StringUtils.isNotBlank(viewCounts)){
+                records.get(i).setViewCounts(Integer.valueOf(viewCounts));
+            }
+        }
+        articlePage.setRecords(records);
+
+        return Result.success(articlePage);
     }
 
     @Override
@@ -67,11 +78,23 @@ public class ArticleServiceImpl implements ArticleService {
         Long[] tagId = pageParams.getTagId();
         Long upperLimitTime = pageParams.getUpperLimitTime();
         Long lowerLimitTime = pageParams.getLowerLimitTime();
+        String search=StringUtils.trim(pageParams.getSearch());
 
         IPage<ArticleVo> page = new Page<>(pageNumber, pageParams.getPageSize());
-        IPage<ArticleVo> articleVoPage = articleMapper.listArticleByCondition(page, categoryId, tagId, upperLimitTime, lowerLimitTime);
+        IPage<ArticleVo> articleVoPage = articleMapper.listArticleByCondition(page, categoryId, tagId, upperLimitTime, lowerLimitTime,search);
 
-        return Result.success(articleVoPage.getRecords());
+        //        读取缓存
+        List<ArticleVo> records = articleVoPage.getRecords();
+        int length=records.size();
+        for(int i=0;i<length;i++){
+            String viewCounts=getViewCounts(records.get(i).getId());
+            if(StringUtils.isNotBlank(viewCounts)){
+                records.get(i).setViewCounts(Integer.valueOf(viewCounts));
+            }
+        }
+        articleVoPage.setRecords(records);
+
+        return Result.success(articleVoPage);
     }
 
 
@@ -81,7 +104,7 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleVo detail = articleMapper.articleDetail(id);
         /*更新阅读量*/
         threadService.updateArticleViewCount(detail);
-        String viewCount = (String) stringRedisTemplate.opsForHash().get("view_count", String.valueOf(detail.getId()));
+        String viewCount = getViewCounts(detail.getId());
         if (viewCount != null) {
             detail.setViewCounts(Integer.parseInt(viewCount));
         }
@@ -248,5 +271,16 @@ public class ArticleServiceImpl implements ArticleService {
         Map<String, Object> result = new HashMap<>();
         result.put("articleId", articleId);
         return Result.success(result);
+    }
+
+    /**
+     * 获取缓存阅读量
+     * @param articleId
+     * @return String
+     * @author Rv_Jiang
+     * @date 2022/6/7 9:02
+     */
+    public String getViewCounts(long articleId){
+       return (String) stringRedisTemplate.opsForHash().get("view_count", String.valueOf(articleId));
     }
 }

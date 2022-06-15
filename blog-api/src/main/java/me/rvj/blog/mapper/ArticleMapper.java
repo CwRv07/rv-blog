@@ -32,7 +32,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
                                             Long categoryId,
                                             Long[] tagId,
                                             Long upperLimitTime,
-                                            Long lowerLimitTime
+                                            Long lowerLimitTime,
+                                            String search
                                             );
 
     /**
