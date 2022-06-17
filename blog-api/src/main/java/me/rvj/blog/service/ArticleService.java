@@ -1,12 +1,8 @@
 package me.rvj.blog.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
-import me.rvj.blog.entity.Article;
-import me.rvj.blog.vo.PageParams;
+import me.rvj.blog.vo.params.PageParams;
 import me.rvj.blog.vo.Result;
 import me.rvj.blog.vo.params.ArticleParams;
-import org.springframework.stereotype.Service;
 
 /**
  * @program: rv-blog

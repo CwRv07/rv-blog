@@ -28,6 +28,11 @@ public enum ErrorCode {
     TAG_HAS_EXIST(400, "当前标签可能已存在"),
     TAG_NOT_EXIST(400, "当前标签可能不存在"),
 
+    //    游客操作
+    NICKNAME_HAS_EXIST(400,"当前昵称已被使用"),
+    EMAIL_INVALID(400,"当前邮箱无效"),
+    USER_NOT_EXIXT(400,"当前用户可能不存在")
+
     ;
 
     private int code;

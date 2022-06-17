@@ -2,7 +2,8 @@ package me.rvj.blog.controller;
 
 import me.rvj.blog.service.LoginService;
 import me.rvj.blog.vo.Result;
-import me.rvj.blog.vo.params.LoginParams;
+import me.rvj.blog.vo.params.SysUserParams;
+import me.rvj.blog.vo.params.UserParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class RegisterController {
     LoginService loginService;
 
     @PostMapping
-    public Result register(@RequestBody LoginParams loginParams){
-        return loginService.register(loginParams);
+    public Result register(@RequestBody SysUserParams userParams){
+        return loginService.register(userParams);
     };
 }

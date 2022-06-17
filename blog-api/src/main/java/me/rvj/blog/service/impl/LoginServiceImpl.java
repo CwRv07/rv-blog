@@ -1,6 +1,5 @@
 package me.rvj.blog.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import me.rvj.blog.entity.SysUser;
 import me.rvj.blog.mapper.SysUserMapper;
@@ -8,15 +7,14 @@ import me.rvj.blog.service.LoginService;
 import me.rvj.blog.util.JWTUtils;
 import me.rvj.blog.vo.ErrorCode;
 import me.rvj.blog.vo.Result;
-import me.rvj.blog.vo.params.LoginParams;
+import me.rvj.blog.vo.params.SysUserParams;
+import me.rvj.blog.vo.params.UserParams;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @program: rv-blog
@@ -33,10 +31,10 @@ public class LoginServiceImpl implements LoginService {
     SysUserMapper userMapper;
 
     @Override
-    public Result login(LoginParams loginParams) {
+    public Result login(SysUserParams userParams) {
 //        参数初始化
-        String account = loginParams.getAccount();
-        String password = loginParams.getPassword();
+        String account = userParams.getAccount();
+        String password = userParams.getPassword();
 
 //        边界判断
         /* 账号密码不为空 */
@@ -62,11 +60,11 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Result register(LoginParams loginParams) {
+    public Result register(SysUserParams userParams) {
 //         参数初始化
-        String account = loginParams.getAccount();
-        String password = loginParams.getPassword();
-        String nickname = loginParams.getNickname();
+        String account = userParams.getAccount();
+        String password = userParams.getPassword();
+        String nickname = userParams.getNickname();
 
 //        边界处理
         if (StringUtils.isBlank(account)

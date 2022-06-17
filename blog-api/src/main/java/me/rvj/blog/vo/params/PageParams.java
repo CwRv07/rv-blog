@@ -1,4 +1,4 @@
-package me.rvj.blog.vo;
+package me.rvj.blog.vo.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

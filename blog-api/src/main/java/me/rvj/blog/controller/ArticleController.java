@@ -3,7 +3,7 @@ package me.rvj.blog.controller;
 import lombok.extern.slf4j.Slf4j;
 import me.rvj.blog.service.ArticleService;
 import me.rvj.blog.vo.ErrorCode;
-import me.rvj.blog.vo.PageParams;
+import me.rvj.blog.vo.params.PageParams;
 import me.rvj.blog.vo.Result;
 import me.rvj.blog.vo.params.ArticleParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
-import java.util.ArrayList;
 
 /**
  * @program: rv-blog

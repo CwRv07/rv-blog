@@ -1,5 +1,6 @@
 package me.rvj.blog.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import me.rvj.blog.entity.User;
 import org.apache.ibatis.annotations.Mapper;
