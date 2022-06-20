@@ -31,7 +31,11 @@ public enum ErrorCode {
     //    游客操作
     NICKNAME_HAS_EXIST(400,"当前昵称已被使用"),
     EMAIL_INVALID(400,"当前邮箱无效"),
-    USER_NOT_EXIXT(400,"当前用户可能不存在")
+    USER_NOT_EXIXT(400,"当前用户可能不存在"),
+
+    //    图片操作
+    INVALID_IMAGE_TYPES(400,"不支持当前图片格式"),
+    INVAILD_IMAGE_SITE(400,"当前图片内存过大")
 
     ;
 

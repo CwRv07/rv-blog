@@ -28,6 +28,8 @@ public class Article {
 
     private String summary;
 
+    private String avatar;
+
     private Integer commentCounts;
 
     private Integer viewCounts;

@@ -1,5 +1,6 @@
 package me.rvj.blog.handle;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import me.rvj.blog.entity.SysUser;
 import me.rvj.blog.service.LoginService;
@@ -49,7 +50,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if(StringUtils.isBlank(token)){
             Result result= Result.fail(ErrorCode.NO_LOGIN);
             response.setContentType("application/json;charset=utf-8");
-            response.getWriter().println(result);
+            response.getWriter().println(JSON.toJSONString(result));
             return false;
         }
 
@@ -58,7 +59,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if(userId==null){
             Result result= Result.fail(ErrorCode.SESSION_TIME_OUT);
             response.setContentType("application/json;charset=utf-8");
-            response.getWriter().println(result);
+            response.getWriter().println(JSON.toJSONString(result));
             return false;
         }
 

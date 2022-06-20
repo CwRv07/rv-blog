@@ -87,8 +87,8 @@
 
     <!--  findSelect  -->
     <select id="findUserById" parameterType="long" resultType="me.rvj.blog.vo.UserVo">
-        SELECT id, nickname, website
-        FROM rv_user
+        SELECT id, nickname
+        FROM rv_sys_user
         WHERE id = #{id};
     </select>
     <select id="findCategoryById" parameterType="long" resultType="me.rvj.blog.entity.Category">
