@@ -129,4 +129,9 @@ public class ArticleController {
         }
         return articleService.deleteArticle(articleId);
     }
+
+    @GetMapping("total")
+    public Result countArticle(){
+        return articleService.countArticle();
+    }
 }

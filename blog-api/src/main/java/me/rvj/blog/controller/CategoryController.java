@@ -25,4 +25,9 @@ public class CategoryController {
     public Result listCategory(){
         return categoryService.listCategory();
     }
+
+    @GetMapping("total")
+    public Result countCategory(){
+        return categoryService.countCategory();
+    }
 }

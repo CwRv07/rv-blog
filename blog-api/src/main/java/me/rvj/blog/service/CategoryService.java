@@ -14,4 +14,12 @@ public interface CategoryService {
      * @date 2022/6/5 18:03
      */
     public Result listCategory();
+
+    /**
+     * 类别总数
+     * @return Result
+     * @author Rv_Jiang
+     * @date 2022/6/21 10:26
+     */
+    public Result countCategory();
 }

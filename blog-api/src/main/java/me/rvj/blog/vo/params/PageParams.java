@@ -16,7 +16,7 @@ public class PageParams {
 
     private Integer page = 1;
 
-    private Integer pageSize = 10;
+    private Integer pageSize = 6;
 
     private Long categoryId;
     private Long[] tagId;

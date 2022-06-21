@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import me.rvj.blog.entity.SysUser;
 import me.rvj.blog.mapper.SysUserMapper;
 import me.rvj.blog.service.LoginService;
+import me.rvj.blog.service.ThreadService;
 import me.rvj.blog.util.JWTUtils;
 import me.rvj.blog.vo.ErrorCode;
 import me.rvj.blog.vo.Result;
@@ -30,6 +31,9 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     SysUserMapper userMapper;
 
+    @Autowired
+    ThreadService threadService;
+
     @Override
     public Result login(SysUserParams userParams) {
 //        参数初始化
@@ -55,6 +59,7 @@ public class LoginServiceImpl implements LoginService {
 
 //        token生成
         String token = JWTUtils.createToken(user.getId());
+        threadService.updateSysUser(user,token);
 
         return Result.success(token);
     }

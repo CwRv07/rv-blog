@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping("insertUser")
-    public Result insertUser(UserParams userParams) {
+    public Result insertUser(@RequestBody UserParams userParams) {
         if (ObjectUtils.anyNull(userParams.getNickname(),userParams.getEmail())|| StringUtils.isAnyBlank(userParams.getNickname(),userParams.getEmail())) {
             return Result.fail(ErrorCode.PARAMS_ERROR);
         }

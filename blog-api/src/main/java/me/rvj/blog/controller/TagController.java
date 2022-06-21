@@ -74,4 +74,8 @@ public class TagController {
         return tagService.deleteTag(tagId);
     }
 
+    @GetMapping("total")
+    public Result countTag(){
+        return tagService.countTag();
+    }
 }

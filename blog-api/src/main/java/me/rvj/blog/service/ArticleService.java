@@ -66,4 +66,12 @@ public interface ArticleService {
      * @date 2022/5/27 21:23
      */
     Result deleteArticle(Long articleId);
+
+    /**
+     * 统计文章
+     * @return Result
+     * @author Rv_Jiang
+     * @date 2022/6/21 10:24
+     */
+    Result countArticle();
 }

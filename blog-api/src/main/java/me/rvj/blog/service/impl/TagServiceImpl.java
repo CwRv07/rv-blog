@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,10 +37,8 @@ public class TagServiceImpl implements TagService {
     @Override
     public Result listTag() {
 
-        IPage<TagVo> tagPage = new Page<>();
-        IPage<TagVo> taglist = tagMapper.listTag(tagPage);
-
-        return Result.success(taglist.getRecords());
+        List<Tag> taglist = tagMapper.selectList(null);
+        return Result.success(taglist);
     }
 
     @Override
@@ -118,5 +117,11 @@ public class TagServiceImpl implements TagService {
         Map<String, Object> result = new HashMap<>();
         result.put("id", id);
         return Result.success(result);
+    }
+
+    @Override
+    public Result countTag() {
+        Integer tagNumber = tagMapper.selectCount(null);
+        return Result.success(tagNumber);
     }
 }

@@ -62,6 +62,12 @@ public interface TagService {
      */
     public Result deleteTag(Long id);
 
-
+    /**
+     * 标签总数
+     * @return Result
+     * @author Rv_Jiang
+     * @date 2022/6/21 10:28
+     */
+    public Result countTag();
 
 }

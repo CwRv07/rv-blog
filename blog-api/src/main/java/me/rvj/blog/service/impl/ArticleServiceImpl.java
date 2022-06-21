@@ -20,6 +20,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    public static final String PREFIX_ARTICLE = "article:";
+
     @Override
     public Result listArticle(PageParams pageParams) {
 //        初始化参数
@@ -57,11 +60,18 @@ public class ArticleServiceImpl implements ArticleService {
 
 //        读取缓存
         List<ArticleVo> records = articlePage.getRecords();
-        int length=records.size();
-        for(int i=0;i<length;i++){
-            String viewCounts=getViewCounts(records.get(i).getId());
-            if(StringUtils.isNotBlank(viewCounts)){
+        int length = records.size();
+        for (int i = 0; i < length; i++) {
+            /* 阅读量 */
+            String viewCounts = getViewCounts(records.get(i).getId());
+            if (StringUtils.isNotBlank(viewCounts)) {
                 records.get(i).setViewCounts(Integer.valueOf(viewCounts));
+            }
+
+            /* 评论数 */
+            String commentCounts = getCommentCounts(records.get(i).getId());
+            if (StringUtils.isNotBlank(commentCounts)) {
+                records.get(i).setCommentCounts(Integer.valueOf(commentCounts));
             }
         }
         articlePage.setRecords(records);
@@ -77,18 +87,23 @@ public class ArticleServiceImpl implements ArticleService {
         Long[] tagId = pageParams.getTagId();
         Long upperLimitTime = pageParams.getUpperLimitTime();
         Long lowerLimitTime = pageParams.getLowerLimitTime();
-        String search=StringUtils.trim(pageParams.getSearch());
+        String search = StringUtils.trim(pageParams.getSearch());
 
         IPage<ArticleVo> page = new Page<>(pageNumber, pageParams.getPageSize());
-        IPage<ArticleVo> articleVoPage = articleMapper.listArticleByCondition(page, categoryId, tagId, upperLimitTime, lowerLimitTime,search);
+        IPage<ArticleVo> articleVoPage = articleMapper.listArticleByCondition(page, categoryId, tagId, upperLimitTime, lowerLimitTime, search);
 
         //        读取缓存
         List<ArticleVo> records = articleVoPage.getRecords();
-        int length=records.size();
-        for(int i=0;i<length;i++){
-            String viewCounts=getViewCounts(records.get(i).getId());
-            if(StringUtils.isNotBlank(viewCounts)){
+        int length = records.size();
+        for (int i = 0; i < length; i++) {
+            String viewCounts = getViewCounts(records.get(i).getId());
+            if (StringUtils.isNotBlank(viewCounts)) {
                 records.get(i).setViewCounts(Integer.valueOf(viewCounts));
+            }
+            /* 评论数 */
+            String commentCounts = getCommentCounts(records.get(i).getId());
+            if (StringUtils.isNotBlank(commentCounts)) {
+                records.get(i).setCommentCounts(Integer.valueOf(commentCounts));
             }
         }
         articleVoPage.setRecords(records);
@@ -101,11 +116,24 @@ public class ArticleServiceImpl implements ArticleService {
     public Result articleDetail(Long id) {
 
         ArticleVo detail = articleMapper.articleDetail(id);
-        /*更新阅读量*/
-        threadService.updateArticleViewCount(detail);
+//         更新阅读量操作
+        String ipAddress = UserThreadLocal.get(UserThreadLocal.KEY_USER_IP_ADDR);
+        /* 检测是否已阅读 */
+        SetOperations<String, String> stringStringSetOperations = stringRedisTemplate.opsForSet();
+        Boolean member = stringStringSetOperations.isMember(PREFIX_ARTICLE + id, ipAddress);
+        if (member != null && member == false) {
+            stringStringSetOperations.add(PREFIX_ARTICLE + id, ipAddress);
+            threadService.updateArticleViewCount(detail.getId());
+            log.warn("文章阅读量+1" + id);
+        }
+
         String viewCount = getViewCounts(detail.getId());
-        if (viewCount != null) {
+        String commentCount = getCommentCounts(detail.getId());
+        if (StringUtils.isNotBlank(viewCount)) {
             detail.setViewCounts(Integer.parseInt(viewCount));
+        }
+        if (StringUtils.isNotBlank(commentCount)) {
+            detail.setCommentCounts(Integer.parseInt(commentCount));
         }
 
         return Result.success(detail);
@@ -119,7 +147,9 @@ public class ArticleServiceImpl implements ArticleService {
         }
 //        初始化参数
         int insertNumber;
-        Long authorId = Long.valueOf(UserThreadLocal.get(UserThreadLocal.KEY_USER_ID));
+        String s = UserThreadLocal.get(UserThreadLocal.KEY_USER_ID);
+        System.out.println(s);
+        Long authorId = Long.valueOf(s);
         Article article = new Article();
 
         article.setCategoryId(articleParams.getCategoryId());
@@ -272,14 +302,33 @@ public class ArticleServiceImpl implements ArticleService {
         return Result.success(result);
     }
 
+    @Override
+    public Result countArticle() {
+        Integer articleNumber = articleMapper.selectCount(null);
+        return Result.success(articleNumber);
+    }
+
     /**
      * 获取缓存阅读量
+     *
      * @param articleId
      * @return String
      * @author Rv_Jiang
      * @date 2022/6/7 9:02
      */
-    public String getViewCounts(long articleId){
-       return (String) stringRedisTemplate.opsForHash().get("view_count", String.valueOf(articleId));
+    public String getViewCounts(long articleId) {
+        return (String) stringRedisTemplate.opsForHash().get(ThreadService.VIEW_COUNT, ThreadService.PREFIX_ARTICLE + String.valueOf(articleId));
+    }
+
+    /**
+     * 获取缓存评论数
+     *
+     * @param articleId
+     * @return String
+     * @author Rv_Jiang
+     * @date 2022/6/21 17:38
+     */
+    public String getCommentCounts(long articleId) {
+        return (String) stringRedisTemplate.opsForHash().get(ThreadService.COMMENT_COUNT, ThreadService.PREFIX_ARTICLE + String.valueOf(articleId));
     }
 }

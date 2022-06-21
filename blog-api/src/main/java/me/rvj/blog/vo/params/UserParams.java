@@ -15,7 +15,7 @@ import javax.validation.constraints.Email;
 public class UserParams {
 
     private Long page;
-    private Long pageSize=10L;
+    private Long pageSize=6L;
 
     private Long id;
 

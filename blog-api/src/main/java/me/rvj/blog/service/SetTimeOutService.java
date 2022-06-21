@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
 import me.rvj.blog.entity.Article;
 import me.rvj.blog.mapper.ArticleMapper;
+import me.rvj.blog.service.impl.ArticleServiceImpl;
 import me.rvj.blog.vo.ArticleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -40,11 +42,21 @@ public class SetTimeOutService {
         log.info(" [定时任务] 更新文章阅读量："+System.currentTimeMillis());
         List<Article> articleList = articleMapper.selectList(null);
         for(Article article:articleList){
+            /* 更新文章阅读量 */
             Integer viewCount = Integer.valueOf((String)stringRedisTemplate.opsForHash().get(ThreadService.VIEW_COUNT, String.valueOf(article.getId())));
-            if(!article.getViewCounts().equals(viewCount)){
+            if(!article.getViewCounts().equals(viewCount)) {
                 article.setViewCounts(viewCount);
                 articleMapper.updateById(article);
             }
+        }
+
+        log.info("[定时任务]重置阅读量ip记录"+System.currentTimeMillis());
+        ListOperations<String, String> stringStringListOperations = stringRedisTemplate.opsForList();
+        for(Article article:articleList){
+            /* 清空阅读量ip记录 */
+            Long id = article.getId();
+            stringStringListOperations.trim(ArticleServiceImpl.PREFIX_ARTICLE+id,0,0);
+            stringStringListOperations.leftPop(ArticleServiceImpl.PREFIX_ARTICLE+id);
         }
     }
 }

@@ -28,4 +28,10 @@ public class CategoryServiceImpl implements CategoryService {
         return Result.success(list);
 
     }
+
+    @Override
+    public Result countCategory() {
+        Integer categoryNumber = categoryMapper.selectCount(null);
+        return Result.success(categoryNumber);
+    }
 }

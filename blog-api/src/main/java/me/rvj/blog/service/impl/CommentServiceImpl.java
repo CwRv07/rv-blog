@@ -7,6 +7,7 @@ import me.rvj.blog.entity.User;
 import me.rvj.blog.mapper.CommentMapper;
 import me.rvj.blog.mapper.UserMapper;
 import me.rvj.blog.service.CommentService;
+import me.rvj.blog.service.ThreadService;
 import me.rvj.blog.vo.ErrorCode;
 import me.rvj.blog.vo.Result;
 import me.rvj.blog.vo.params.CommentParams;
@@ -29,6 +30,8 @@ public class CommentServiceImpl implements CommentService {
     UserMapper userMapper;
     @Autowired
     CommentMapper commentMapper;
+    @Autowired
+    ThreadService threadService;
 
     @Override
     public Result insertComment(CommentParams commentParams) {
@@ -64,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
                 needUpdate=true;
             }
             if(needUpdate){
-//                /* 暂且直接更新，未进行异步更新 */
+                /* 暂且直接更新，未进行异步更新 */
                 userMapper.updateById(user);
             }
         }
@@ -83,7 +86,7 @@ public class CommentServiceImpl implements CommentService {
             log.error("[评论新增操作] comment新增操作失败", comment);
             return Result.fail(ErrorCode.SERVER_BUSY);
         }
-
+        threadService.updateArticleCommentCount(commentParams.getArticleId());
         return Result.success(comment);
     }
 }
