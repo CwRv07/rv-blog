@@ -15,6 +15,16 @@ import javax.validation.constraints.NotNull;
 @Data
 public class CommentParams {
 
+    private Long page;
+
+    private Long pageSize=6L;
+
+    private Integer status;
+
+    private Long id;
+
+    private Integer praise;
+
     @NotBlank(message = "昵称不可为空")
     private String nickname;
 

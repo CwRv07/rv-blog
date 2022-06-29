@@ -82,7 +82,8 @@
         SELECT *
         FROM rv_comment
         WHERE article_id = #{id}
-        ORDER BY create_date DESC, 'like' DESC
+          AND status = 1
+        ORDER BY create_date DESC, praise DESC
     </select>
 
     <!--  findSelect  -->
@@ -111,6 +112,6 @@
     <select id="findContentById" parameterType="long" resultType="java.lang.String">
         SELECT content
         FROM rv_article_body
-        WHERE id = #{id};
+        WHERE id = #{id}
     </select>
 </mapper>

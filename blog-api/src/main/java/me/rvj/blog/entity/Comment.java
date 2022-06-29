@@ -26,5 +26,7 @@ public class Comment {
 
     private Long toUid;
 
-    private Integer like;
+    private Integer praise;
+
+    private Integer status;
 }

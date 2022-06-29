@@ -60,12 +60,12 @@ public class UserController {
         return userService.insertUser(userParams.getNickname().trim(), userParams.getEmail().trim(), userParams.getWebsite());
     }
 
-    @DeleteMapping("deleteUser")
-    public Result deleteUser(UserParams userParams){
-        if(ObjectUtils.isEmpty(userParams.getId())){
+    @DeleteMapping("deleteUser/{userId}")
+    public Result deleteUser(@PathVariable("userId") Long userId){
+        if(userId==null){
             return Result.fail(ErrorCode.PARAMS_ERROR);
         }
-        return userService.deleteUser(userParams.getId());
+        return userService.deleteUser(userId);
     }
 
 }

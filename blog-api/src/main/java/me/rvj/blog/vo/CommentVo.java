@@ -27,7 +27,7 @@ public class CommentVo {
 
     private String createDate;
 
-    private Integer like;
+    private Integer praise;
 
     @TableField(exist = false)
     private UserVo toUser;

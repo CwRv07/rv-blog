@@ -26,9 +26,9 @@ public class testController {
     @Autowired
     SysUserMapper sysUserMapper;
 
-    @GetMapping()
+    @GetMapping("")
     public Result test(){
-        SysUser sysUser = sysUserMapper.selectById(1404448588146192386L);
-        return Result.success(sysUser);
+        System.out.println("Hello World");
+        return null;
     }
 }

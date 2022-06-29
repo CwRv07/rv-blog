@@ -1,6 +1,7 @@
 package me.rvj.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import me.rvj.blog.entity.Comment;
 import me.rvj.blog.entity.User;
@@ -15,6 +16,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @program: rv-blog
@@ -89,4 +93,65 @@ public class CommentServiceImpl implements CommentService {
         threadService.updateArticleCommentCount(commentParams.getArticleId());
         return Result.success(comment);
     }
+
+    @Override
+    public Result listComment(Long page, Long pageSize) {
+        Page<Comment> commentPage = new Page<>(page, pageSize);
+        Page<Comment> commentList = commentMapper.selectPage(commentPage, null);
+
+        return Result.success(commentList);
+    }
+
+    @Override
+    public Result listCommentByStatus(Long page, Long pageSize, Integer status) {
+        Page<Comment> commentPage = new Page<>(page, pageSize);
+        LambdaQueryWrapper<Comment> commentLQW = new LambdaQueryWrapper<>();
+
+        if (status != null) {
+            commentLQW.like(Comment::getStatus, status);
+        }
+        Page<Comment> commentList = commentMapper.selectPage(commentPage, commentLQW);
+
+        return Result.success(commentList);
+    }
+
+    @Override
+    public Result deleteComment(Long id) {
+        LambdaQueryWrapper<Comment> commentLQW = new LambdaQueryWrapper<>();
+
+//        检测评论是否存在
+        commentLQW.eq(Comment::getId, id);
+        Comment comment = commentMapper.selectOne(commentLQW);
+        if(org.apache.commons.lang3.ObjectUtils.isEmpty(comment)){
+            return Result.fail(ErrorCode.COMMENT_NOT_EXIXT);
+        }
+
+        int delete = commentMapper.deleteById(id);
+        if(delete!=0){
+            return Result.success(id);
+        }else{
+            return Result.fail(ErrorCode.SERVER_BUSY);
+        }
+    }
+
+    @Override
+    public Result updateComment(Long id, String content, Integer praise, Integer status) {
+        Comment comment = new Comment();
+        comment.setId(id);
+        comment.setContent(content);
+        comment.setPraise(praise);
+        comment.setStatus(status);
+
+        if(commentMapper.updateById(comment)==0){
+            /* 更新失败 */
+            log.error("[tab更新操作] tag更新操作失败", comment);
+            return Result.fail(ErrorCode.COMMENT_NOT_EXIXT);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("id", comment.getId());
+        return Result.success(result);
+
+    }
+
+
 }

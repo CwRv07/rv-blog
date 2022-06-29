@@ -35,8 +35,10 @@ public enum ErrorCode {
 
     //    图片操作
     INVALID_IMAGE_TYPES(400,"不支持当前图片格式"),
-    INVAILD_IMAGE_SITE(400,"当前图片内存过大")
+    INVAILD_IMAGE_SITE(400,"当前图片内存过大"),
 
+    //    评论操作
+    COMMENT_NOT_EXIXT(400,"当前评论可能不存在")
     ;
 
     private int code;
